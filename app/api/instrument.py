@@ -52,6 +52,7 @@ def api_instrument_type_all():
 @app.route('/api/instrument/type/<type_name>', methods=['GET', 'POST'])
 def api_instrument_type(type_name):
     try:
+        type_name = type_name.upper()
         trading_instrument_types = app_state.get('trading_instrument_types')
         result = trading_instrument_types[type_name] if type_name in trading_instrument_types else []
 
@@ -89,6 +90,7 @@ def api_instrument_asset_class_all():
 @app.route('/api/instrument/asset-class/<class_name>', methods=['GET', 'POST'])
 def api_instrument_asset_class(class_name):
     try:
+        class_name = class_name.upper()
         trading_instrument_asset_classes = app_state.get('trading_instrument_asset_classes')
         result = trading_instrument_asset_classes[class_name] if class_name in trading_instrument_asset_classes else []
 
