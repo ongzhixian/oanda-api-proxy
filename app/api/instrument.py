@@ -15,7 +15,6 @@ from main import app_state
 def api_instrument():
     try:
         trading_instruments = app_state.get('trading_instruments')
-        breakpoint()
         response_message = f"OK in instruments count: {len(trading_instruments)}"
         
         log.info("response_message")
