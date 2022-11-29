@@ -1,6 +1,8 @@
+
 import json
 
 from datetime import datetime
+from glob import glob
 from os import path, makedirs
 from urllib.request import urlopen as url_open
 from urllib.request import Request as url_request
@@ -38,6 +40,8 @@ class OandaApi(object):
         SAVE_FILE_PATH = path.join(self.output_path, 'instruments', FILE_NAME)
         with open(SAVE_FILE_PATH, 'w', encoding='utf-8') as out_file:
             out_file.write(data)
+            log.info("Save instruments to file", file_name=FILE_NAME, file_path=SAVE_FILE_PATH)
+
 
     def get_account_instruments(self):
         """
@@ -51,8 +55,11 @@ class OandaApi(object):
             data=None, 
             headers=self.headers
         )
+
+        log.info("Fetching instruments", event="fetch instruments", status="start")
         with url_open(request) as response:
             response_data = response.read().decode("utf-8")
+            log.info("Fetch instruments", event="fetch instruments", status="end")
             self.save_data_to_file(response_data)
         try:
             response_json = json.loads(response_data)
@@ -60,3 +67,39 @@ class OandaApi(object):
         except Exception as ex:
             log.warn(f"Invalid response_json; {ex}")
             return []
+
+
+    def current_instrument_file_exists(self):
+        """
+        Check if instrument file for current runtime date exists.
+        Return tuple of 2 values:
+        1. Exists  -- True / False
+        2. FilePath / None
+        """
+        FILE_DATE = datetime.utcnow().strftime("%Y%m%d")
+        glob_pattern = path.join(self.output_path, 'instruments', f'instruments-{FILE_DATE}*.txt')
+        files = glob(glob_pattern)
+        if len(files) <= 0:
+            return (False, None)
+        return (True, sorted(files)[-1])
+
+    def get_instruments_from_file(self, file_path):
+        """
+        Read the instruments section of JSON file.
+        """
+        with open(file_path, 'r', encoding='utf-8') as in_file:
+            log.info("Get instruments from file", file_path=file_path)
+            response_json = json.loads(in_file.read())
+            return response_json['instruments'] if 'instruments' in response_json else []
+
+    def get_instruments(self):
+        """
+        Get instruments
+        """
+
+        (current_instrument_file_exists, file_path) = self.current_instrument_file_exists()
+
+        if current_instrument_file_exists:
+            return self.get_instruments_from_file(file_path)
+        
+        return self.get_account_instruments()

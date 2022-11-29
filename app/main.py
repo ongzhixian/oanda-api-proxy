@@ -12,6 +12,10 @@ import pika
 
 from logger import setup_logging, Logger
 from oanda_api import OandaApi
+from flask_app import app
+from app_state import AppState
+
+app_state = AppState()
 
 def get_configuration_settings():
     with open("app-settings.json", "r", encoding="utf-8") as in_file:
@@ -44,7 +48,6 @@ def get_output_path():
     
     return path.join(user_profile_path, "Dropbox\\myThinkBook\\oanda")
     
-
 if __name__ == "__main__":
 
     configuration_settings = get_configuration_settings()
@@ -59,13 +62,15 @@ if __name__ == "__main__":
     
     oanda_api = OandaApi(oanda_settings, output_path)
 
-    trading_instruments = oanda_api.get_account_instruments()
+    trading_instruments = oanda_api.get_instruments()
+
+    app_state.put('trading_instruments', trading_instruments)
+
+    log.info("Instruments", count=len(trading_instruments))
     
     # store_account_instruments_to_database(trading_instruments)
     # instrument_code_list = get_instrument_code_list(trading_instruments)
     # publish_tickers(url_parameters, instrument_code_list)
 
-    from flask_app import app
-
-    app.run(host='0.0.0.0', port=31000, debug=True)
+    app.run(host='0.0.0.0', port=31000, debug=False)
     log.info("Program complete", source="program", event="complete")
