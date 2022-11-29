@@ -1,6 +1,7 @@
 import os
 import json
 import logging
+import threading
 
 from datetime import datetime
 from os import path
@@ -14,6 +15,7 @@ from logger import setup_logging, Logger
 from oanda_api import OandaApi
 from flask_app import app
 from app_state import AppState
+from data_refresh_tasks import instruments_refresh_task
 
 app_state = AppState()
 
@@ -71,6 +73,13 @@ if __name__ == "__main__":
     # store_account_instruments_to_database(trading_instruments)
     # instrument_code_list = get_instrument_code_list(trading_instruments)
     # publish_tickers(url_parameters, instrument_code_list)
+
+    # instruments_refresh_thread = threading.Thread(target=instruments_refresh_task, args=(1,), daemon=True)
+    # instruments_refresh_thread.start()
+
+    app_state.schedule(3, instruments_refresh_task, ("3sec",))
+    app_state.schedule(5, instruments_refresh_task, ("5sec",))
+    app_state.schedule(8, instruments_refresh_task, ("8sec",))
 
     app.run(host='0.0.0.0', port=31000, debug=False)
     log.info("Program complete", source="program", event="complete")
