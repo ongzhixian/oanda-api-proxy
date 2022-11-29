@@ -22,3 +22,77 @@ def api_instrument():
     except Exception as e:
         log.info("ERROR----------ERROR----------")
         log.error(e)
+
+
+@app.route('/api/instrument/type/summary', methods=['GET', 'POST'])
+def api_instrument_type_summary():
+    try:
+        trading_instrument_types = app_state.get('trading_instrument_types')
+
+        summary = {}
+        for type_name in trading_instrument_types:
+            summary[type_name] = len(trading_instrument_types[type_name])
+
+        return json.dumps(summary)
+    except Exception as e:
+        log.info("ERROR----------ERROR----------")
+        log.error(e)
+
+
+@app.route('/api/instrument/type/', methods=['GET', 'POST'])
+def api_instrument_type_all():
+    try:
+        trading_instrument_types = app_state.get('trading_instrument_types')
+        return json.dumps(trading_instrument_types)
+    except Exception as e:
+        log.info("ERROR----------ERROR----------")
+        log.error(e)
+
+
+@app.route('/api/instrument/type/<type_name>', methods=['GET', 'POST'])
+def api_instrument_type(type_name):
+    try:
+        trading_instrument_types = app_state.get('trading_instrument_types')
+        result = trading_instrument_types[type_name] if type_name in trading_instrument_types else []
+
+        return json.dumps(result)
+    except Exception as e:
+        log.info("ERROR----------ERROR----------")
+        log.error(e)
+
+
+@app.route('/api/instrument/asset-class/summary', methods=['GET', 'POST'])
+def api_instrument_asset_class_summary():
+    try:
+        trading_instrument_asset_classes = app_state.get('trading_instrument_asset_classes')
+
+        summary = {}
+        for asset_class in trading_instrument_asset_classes:
+            summary[asset_class] = len(trading_instrument_asset_classes[asset_class])
+
+        return json.dumps(summary)
+    except Exception as e:
+        log.info("ERROR----------ERROR----------")
+        log.error(e)
+
+
+@app.route('/api/instrument/asset-class/', methods=['GET', 'POST'])
+def api_instrument_asset_class_all():
+    try:
+        trading_instrument_asset_classes = app_state.get('trading_instrument_asset_classes')
+        return json.dumps(trading_instrument_asset_classes)
+    except Exception as e:
+        log.info("ERROR----------ERROR----------")
+        log.error(e)
+
+
+@app.route('/api/instrument/asset-class/<class_name>', methods=['GET', 'POST'])
+def api_instrument_asset_class(class_name):
+    try:
+        trading_instrument_asset_classes = app_state.get('trading_instrument_asset_classes')
+        result = trading_instrument_asset_classes[class_name] if class_name in trading_instrument_asset_classes else []
+
+        return json.dumps(result)
+    except Exception as e:
+        log.info("ERROR----------ERROR----------")
+        log.error(e)

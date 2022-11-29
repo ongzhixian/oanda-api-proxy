@@ -14,7 +14,7 @@ import pika
 from logger import setup_logging, Logger
 from oanda_api import OandaApi
 from flask_app import app
-from app_state import AppState
+from app_state import AppState, heartbeat_task
 from data_refresh_tasks import instruments_refresh_task
 
 app_state = AppState()
@@ -66,9 +66,9 @@ if __name__ == "__main__":
 
     trading_instruments = oanda_api.get_instruments()
 
-    app_state.put('trading_instruments', trading_instruments)
+    app_state.store_trading_instruments(trading_instruments)
 
-    log.info("Instruments", count=len(trading_instruments))
+    
     
     # store_account_instruments_to_database(trading_instruments)
     # instrument_code_list = get_instrument_code_list(trading_instruments)
@@ -77,9 +77,13 @@ if __name__ == "__main__":
     # instruments_refresh_thread = threading.Thread(target=instruments_refresh_task, args=(1,), daemon=True)
     # instruments_refresh_thread.start()
 
-    app_state.schedule(3, instruments_refresh_task, ("3sec",))
-    app_state.schedule(5, instruments_refresh_task, ("5sec",))
-    app_state.schedule(8, instruments_refresh_task, ("8sec",))
+    # app_state.schedule(3, instruments_refresh_task, ("3sec",))
+    # app_state.schedule(5, instruments_refresh_task, ("5sec",))
+    # app_state.schedule(8, instruments_refresh_task, ("8sec",))
+    # app_state.schedule(8, instruments_refresh_task, ("8sec",))
+
+    # heartbeat_thread = threading.Thread(target=heartbeat_task, daemon=True)
+    # heartbeat_thread.start()
 
     app.run(host='0.0.0.0', port=31000, debug=False)
     log.info("Program complete", source="program", event="complete")

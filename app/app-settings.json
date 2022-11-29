@@ -28,6 +28,9 @@
 			"USERNAME" : "root"
 		}
 	},
+    "output": {
+
+    },
     "secret_configuration_files" : {
         "oanda" : ".oanda-config.json",
         "cloudampq" : ".cloudampq.json"
