@@ -1,1 +1,1 @@
-__all__ = ["website", "health", "instrument"]
+__all__ = ["website", "health", "instrument", "graphql"]

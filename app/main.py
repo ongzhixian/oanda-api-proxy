@@ -49,7 +49,11 @@ def get_output_path():
     user_profile_path = os.environ["USERPROFILE"]
     
     return path.join(user_profile_path, "Dropbox\\myThinkBook\\oanda")
-    
+
+
+
+
+
 if __name__ == "__main__":
 
     configuration_settings = get_configuration_settings()
