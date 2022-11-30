@@ -12,13 +12,42 @@ log = Logger()
 
 from main import app_state
 
+def map_to_common_instrument_format(instrument_list):
+    mapped_instruments = []
+    for instrument in instrument_list:
+        mapped_instruments.append(map_to_instrument(instrument))
+    return mapped_instruments
+
+
+def map_to_instrument(instrument):
+    return {
+        'id' : instrument['name'],
+        'category' : instrument['type'],
+        'displayName' : instrument['displayName'],
+        'assetClass' : get_asset_class_tag_value(instrument),
+    }
+
+
+def get_asset_class_tag_value(instrument):
+    if 'tags' not in instrument:
+        return ''
+
+    for tag in instrument['tags']:
+        if tag['type'] == 'ASSET_CLASS':
+            return tag['name']
+    return ''
+
+
 @app.route('/api/instrument', methods=['GET', 'POST'])
 def api_instrument():
     try:
         trading_instruments = app_state.get('trading_instruments')
         response_message = f"OK in instruments count: {len(trading_instruments)}"
         log.info(response_message)
-        return json.dumps(trading_instruments)
+
+        mapped_instruments = map_to_common_instrument_format(trading_instruments)
+
+        return json.dumps(mapped_instruments)
     except Exception as e:
         log.info("ERROR----------ERROR----------")
         log.error(e)

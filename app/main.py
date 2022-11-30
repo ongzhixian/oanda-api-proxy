@@ -89,5 +89,6 @@ if __name__ == "__main__":
     # heartbeat_thread = threading.Thread(target=heartbeat_task, daemon=True)
     # heartbeat_thread.start()
 
+    log.info("Running Flask app", port=31000, debug=False)
     app.run(host='0.0.0.0', port=31000, debug=False)
     log.info("Program complete", source="program", event="complete")
