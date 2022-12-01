@@ -6,6 +6,7 @@ type_defs = gql(
    """
    type Query {
        places: [Place]
+       hello: String
    }
 
 
@@ -35,5 +36,13 @@ def places(*_):
        },
    ]
 
+@query.field("hello")
+def hello(*_):
+   return "hello world"
+
+
 # Create executable schema
 schema = make_executable_schema(type_defs, query)
+
+# reference: https://blog.logrocket.com/build-graphql-api-python-flask-ariadne/
+# reference: https://ariadnegraphql.org/docs/open-tracing
