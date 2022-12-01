@@ -74,6 +74,7 @@ if __name__ == "__main__":
 
     
     
+    
     # store_account_instruments_to_database(trading_instruments)
     # instrument_code_list = get_instrument_code_list(trading_instruments)
     # publish_tickers(url_parameters, instrument_code_list)
@@ -88,6 +89,10 @@ if __name__ == "__main__":
 
     # heartbeat_thread = threading.Thread(target=heartbeat_task, daemon=True)
     # heartbeat_thread.start()
+
+    from grpc_server import serve_grpc
+    grpc_server_thread = threading.Thread(target=serve_grpc, daemon=True)
+    grpc_server_thread.start()
 
     log.info("Running Flask app", port=31000, debug=False)
     app.run(host='0.0.0.0', port=31000, debug=False)
