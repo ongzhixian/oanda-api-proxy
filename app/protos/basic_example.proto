@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.examples.helloworld";
+option java_outer_classname = "HelloWorldProto";
+option objc_class_prefix = "HLW";
+
+package basicExample;
+
+// The greeting service definition.
+service BasicExample {
+
+  rpc UnaryApi (BasicExampleRequest) returns (BasicExampleResponse) {}
+
+  rpc ServerStreamingApi (BasicExampleRequest) returns (stream BasicExampleResponse) {}
+  rpc ClientStreamingApi (stream BasicExampleRequest) returns (BasicExampleResponse) {}
+  rpc DuplexStreamingApi (stream BasicExampleRequest) returns (stream BasicExampleResponse) {}
+}
+
+// The request message containing the user's name.
+message BasicExampleRequest {
+  string action_name = 1;
+}
+
+// The response message containing the greetings
+message BasicExampleResponse {
+  string message = 1;
+}
+
+// https://faun.pub/4-types-of-grpc-communication-in-python-dfe6919597e1
