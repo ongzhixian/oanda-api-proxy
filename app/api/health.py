@@ -12,9 +12,9 @@ log = Logger()
 @app.route('/api/health', methods=['GET', 'POST'])
 def api_health():
     try:
-        response_message = "OK"
-        log.info("response_message")
-        return response_message
+        status_text = "OK"
+        log.info("Health check", status=status_text)
+        return status_text
     except Exception as e:
         log.info("ERROR----------ERROR----------")
         log.error(e)
